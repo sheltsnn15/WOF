@@ -44,29 +44,29 @@ def get_user_choice():
 # 
 def action(choice, vowels, consonants, phrase_to_guess, loaded_phrase, sentence, vowels_picked, consonants_picked):
     solved = False
-    endGame = False
+    end_game = False
     if choice == 1:
-        pick_consonant(consonants, vowels, phrase_to_guess, loaded_phrase,  consonants_picked)
+        guess_consonant(consonants, vowels, phrase_to_guess, loaded_phrase,  consonants_picked)
     elif choice == 2:
-        pick_vowel(vowels, consonants, phrase_to_guess, loaded_phrase, vowels_picked, consonants_picked)
+        guess_vowel(vowels, consonants, phrase_to_guess, loaded_phrase, vowels_picked, consonants_picked)
     elif choice == 3:
-        solved = solve(phrase_to_guess, sentence)
+        solved = guess_phrase(phrase_to_guess, sentence)
     elif choice == 4:
-        endGame = True
+        end_game = True
         solved = True
-    return endGame, solved
+    return end_game, solved
 
 # Ask user for consonant
 
 
-def pick_consonant(consonants, vowels, phrase_to_guess, loaded_phrase, consonants_picked):
+def guess_consonant(consonants, vowels, phrase_to_guess, loaded_phrase, consonants_picked):
     carry_on = True
     if len(set(consonants)) == 1:
         print("There are no more consonants to choose.")
         carry_on = False
     else:
         consonant = (str(input("Pick a consonant: "))).lower()
-    no_consonants = 0
+    num_consonants = 0
     while (consonant.upper() not in consonants) and carry_on == True:
         if (consonant.upper() in vowels):
             print("Vowels cannot be picked.")
@@ -81,20 +81,20 @@ def pick_consonant(consonants, vowels, phrase_to_guess, loaded_phrase, consonant
         index = loaded_phrase.index(consonant)
         phrase_to_guess[index] = consonant.upper()
         loaded_phrase[index] = ' '
-        no_consonants += 1
+        num_consonants += 1
     consonants_picked.append(consonant.upper())
     consonants[consonants.index(consonant.upper())] = ' '
-    if no_consonants == 1:
-        print(f'There is {no_consonants} {consonant.upper()}.\n')
-    elif no_consonants > 1:
-        print(f"There are {no_consonants} {consonant.upper()}'s.\n")
+    if num_consonants == 1:
+        print(f'There is {num_consonants} {consonant.upper()}.\n')
+    elif num_consonants > 1:
+        print(f"There are {num_consonants} {consonant.upper()}'s.\n")
     else:
         print(f"I'm sorry, there are no {consonant.upper()}'s.\n")
 
 
 # Lets the user buy a vowel
-def pick_vowel(vowels, consonants, phrase_to_guess, loaded_phrase, vowels_picked, consonants_picked):
-    no_vowel = 0
+def guess_vowel(vowels, consonants, phrase_to_guess, loaded_phrase, vowels_picked, consonants_picked):
+    num_vowel = 0
     carry_on = True
     vowel = (str(input("Pick a vowel: "))).lower()
     while (vowel not in loaded_phrase) and (carry_on == True):
@@ -122,11 +122,11 @@ def pick_vowel(vowels, consonants, phrase_to_guess, loaded_phrase, vowels_picked
             index = loaded_phrase.index(vowel)
             phrase_to_guess[index] = vowel.upper()
             loaded_phrase[index] = ' '
-            no_vowel += 1
-    if no_vowel > 1:
-        print(f"There are {no_vowel} {vowel.upper()}'s.\n")
-    elif no_vowel == 1:
-        print(f"There is {no_vowel} {vowel.upper()}.\n")
+            num_vowel += 1
+    if num_vowel > 1:
+        print(f"There are {num_vowel} {vowel.upper()}'s.\n")
+    elif num_vowel == 1:
+        print(f"There is {num_vowel} {vowel.upper()}.\n")
 
     if vowel.upper() in vowels:
         index = vowels.index(vowel.upper())
@@ -134,7 +134,7 @@ def pick_vowel(vowels, consonants, phrase_to_guess, loaded_phrase, vowels_picked
         vowels_picked.append(vowel.upper())
 
 # Lets the user guess correct answer
-def solve(phrase_to_guess, sentence):
+def guess_phrase(phrase_to_guess, sentence):
     print("Enter your solution.")
     print(f'  Clues: {"".join(phrase_to_guess)}')
     guess = (str(input("  Guess: "))).lower()
