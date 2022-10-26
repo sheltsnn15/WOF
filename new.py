@@ -42,8 +42,7 @@ def getChoice():
 
 
 # This is where the user choice is directed
-def action(choice, balance, balanceTotal, vowels, consonants, toGuess, secretSentence, sentence, vowelsPurchased,
-           consonantsPicked):
+def action(choice, balance, balanceTotal, vowels, consonants, toGuess, secretSentence, sentence, vowelsPurchased, consonantsPicked):
     solved = False
     endGame = False
     if (choice == 1):
