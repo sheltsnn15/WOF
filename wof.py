@@ -1,6 +1,9 @@
 from game_error_codes import GameErrorCodes
 import random
 
+class Wheel_Of_Fortune:
+    def __init__(self, phrases):
+        self.phrases = phrases
 
 # read and load phrases from phrases.txt
 def get_phrases():
@@ -57,8 +60,6 @@ def action(choice, vowels, consonants, phrase_to_guess, loaded_phrase, sentence,
     return end_game, solved
 
 # Ask user for consonant
-
-
 def guess_consonant(consonants, vowels, phrase_to_guess, loaded_phrase, consonants_picked):
     carry_on = True
     if len(set(consonants)) == 1:
