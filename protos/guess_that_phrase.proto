@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.grpc.examples.guessthatphrase";
+option java_outer_classname = "GuessThatPhrase";
+option objc_class_prefix = "GTP";
+
+// The greeting service definition.
+service DisplayGuessedLetter {
+  // Sends a Phrase
+  rpc SendLetter (LetterRequest) returns (LetterResponse) {}
+  // Sends a Phrase
+  rpc SendPhrase (PhraseRequest) returns (PhraseResponse) {}
+}
+
+// The request message containing the phrase letter.
+message LetterRequest {
+  string letter = 1;
+}
+
+// The response message containing the greetings
+message LetterResponse {
+  string message = 1;
+}
+
+// The request message containing the phrase letter.
+message PhraseRequest {
+  string phrase = 1;
+}
+
+// The response message containing the greetings
+message PhraseResponse {
+  string message = 1;
+}
