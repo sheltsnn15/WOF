@@ -17,9 +17,9 @@ class Guess_That_Phrase:
     def main_display(self, phrase_to_guess):
         phrase = "".join(phrase_to_guess)
         print(f'---------------- Welcome to the Wheel of Fortune! -----------------')
-        print(f'  {phrase:^{54}} ')
+        print(f'     {phrase:^{54}}')
         print()
-        print(f'                  {"".join(self.LETTERS)}                  ')
+        print(f'Available Letters:  {"".join(self.LETTERS)}')
         print()
 
     # Ask user choice
@@ -44,7 +44,7 @@ class Guess_That_Phrase:
         solved = False
         end_game = False
         if choice == 1:
-            self.guess_letter(phrase_to_guess, loaded_phrase)
+            solved = self.guess_letter(phrase_to_guess, loaded_phrase)
         elif choice == 2:
             solved = self.guess_phrase(phrase_to_guess)
         elif choice == 3:
@@ -63,7 +63,7 @@ class Guess_That_Phrase:
     def guess_letter(self, phrase_to_guess, loaded_phrase):
         letter = (str(input("Pick a letter: "))).lower()
         num_letters = 0
-        while (letter.upper() not in self.LETTERS):
+        while letter.upper() not in self.LETTERS:
             if len(letter) != 1:
                 print(f"{GameErrorCodes.ONLY_ONE_CHARACTER}")
             elif letter.upper() in self.letters_picked:
