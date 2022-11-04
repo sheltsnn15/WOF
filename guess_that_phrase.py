@@ -1,10 +1,34 @@
-from game_error_codes import GameErrorCodes
+from error_codes import GameErrorCodes
 import random as random
 
-from dao.guess_that_phrase_dao import Guess_That_Phrase_DAO
+from guess_that_phrase_dao import Guess_That_Phrase_DAO
 
 
-class Guess_That_Phrase:
+def get_user_choice():
+    valid_choice = False
+    correct = ['1', '2', '3', '4']
+    while not valid_choice:
+        print("\nMenu:")
+        print("  1 - Guess a letter.")
+        print("  2 - Solve the puzzle.")
+        print("  3 - Quit the game.")
+        choice = str(input("\nEnter the number of your choice: "))
+        if choice in correct:
+            valid_choice = True
+        else:
+            print(f"{choice} is an invalid choice.\n")
+    return int(choice)
+
+
+def get_random_phrase():
+    # calling the list of phrases from the text files
+    phrases = Guess_That_Phrase_DAO.get_instance().phrases
+    size = len(phrases)
+    # select random phrase from the list
+    return phrases[random.randint(0, size - 1)]
+
+
+class GuessThatPhrase:
 
     def __init__(self):
         self.sentence = ""
@@ -24,20 +48,6 @@ class Guess_That_Phrase:
         print()
 
     # Ask user choice
-    def get_user_choice(self):
-        valid_choice = False
-        correct = ['1', '2', '3', '4']
-        while not valid_choice:
-            print("\nMenu:")
-            print("  1 - Guess a letter.")
-            print("  2 - Solve the puzzle.")
-            print("  3 - Quit the game.")
-            choice = str(input("\nEnter the number of your choice: "))
-            if choice in correct:
-                valid_choice = True
-            else:
-                print(f"{choice} is an invalid choice.\n")
-        return int(choice)
 
     # User action process method
 
@@ -52,13 +62,6 @@ class Guess_That_Phrase:
             end_game = True
             solved = True
         return end_game, solved
-
-    def get_random_phrase(self):
-        # calling the list of phrases from the text files
-        phrases = Guess_That_Phrase_DAO.get_instance().phrases
-        size = len(phrases)
-        # select random phrase from the list
-        return phrases[random.randint(0, size - 1)]
 
     # Ask user for a letter
     def guess_letter(self, phrase_to_guess):
@@ -106,7 +109,7 @@ class Guess_That_Phrase:
         while not end_game:
             solved = False
 
-            self.sentence = self.get_random_phrase()
+            self.sentence = get_random_phrase()
 
             phrase_to_guess = []
 
@@ -121,7 +124,7 @@ class Guess_That_Phrase:
 
             while not solved:
                 self.main_display(phrase_to_guess)
-                choice = self.get_user_choice()
+                choice = get_user_choice()
                 solved, end_game = self.process_user_action(
                     choice, phrase_to_guess)
 
@@ -137,5 +140,5 @@ class Guess_That_Phrase:
 
 
 if __name__ == '__main__':
-    gtf = Guess_That_Phrase()
+    gtf = GuessThatPhrase()
     gtf.starting_point()

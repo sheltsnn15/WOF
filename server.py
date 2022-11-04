@@ -4,7 +4,7 @@ import grpc
 
 import guess_that_phrase_pb2
 import guess_that_phrase_pb2_grpc
-from domain import guess_that_phrase
+import guess_that_phrase
 
 
 class DisplayGuessedLetterServicer(guess_that_phrase_pb2_grpc.DisplayGuessedLetterServicer):
@@ -17,7 +17,7 @@ class DisplayGuessedLetterServicer(guess_that_phrase_pb2_grpc.DisplayGuessedLett
     def SendLetter(self, request, context):
         """Sends a Phrase
         """
-        guess_that_phrase.Guess_That_Phrase.guess_letter(phrase_to_guess=request.letter)
+        guess_that_phrase.Guess_That_Phrase.guess_letter(request.letter)
         return guess_that_phrase_pb2.LetterResponse(message='{0}'.format(request.letter))
 
     def SendPhrase(self, request, context):
