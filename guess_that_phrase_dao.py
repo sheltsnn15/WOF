@@ -30,7 +30,7 @@ class Guess_That_Phrase_DAO:
             Guess_That_Phrase_DAO.__instance = self
             self.phrases = []
             # read phrases.txt
-            with open("../phrases.txt", 'r') as file:
+            with open("phrases.txt", 'r') as file:
                 for line in file:
                     # append phrases to a list
                     self.phrases.append(line.rstrip())

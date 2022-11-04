@@ -34,13 +34,14 @@ class GuessThatPhrase:
         self.sentence = ""
         self.letters_picked = []
         self.loaded_phrase = []
+        self.phrase_to_guess = []
 
     LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
                'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 
     # Main display
-    def main_display(self, phrase_to_guess):
-        phrase = "".join(phrase_to_guess)
+    def main_display(self):
+        phrase = "".join(self.phrase_to_guess)
         print(f'---------------- Welcome to the Wheel of Fortune! -----------------')
         print(f'     {phrase:^{54}}')
         print()
@@ -51,21 +52,21 @@ class GuessThatPhrase:
 
     # User action process method
 
-    def process_user_action(self, choice, phrase_to_guess):
+    def process_user_action(self, choice):
         solved = False
         end_game = False
         if choice == 1:
-            solved = self.guess_letter(phrase_to_guess)
+            letter = str(input("Pick a letter: ")).lower()
+            solved = self.guess_letter(letter)
         elif choice == 2:
-            solved = self.guess_phrase(phrase_to_guess)
+            solved = self.guess_phrase()
         elif choice == 3:
             end_game = True
             solved = True
         return end_game, solved
 
     # Ask user for a letter
-    def guess_letter(self, phrase_to_guess):
-        letter = (str(input("Pick a letter: "))).lower()
+    def guess_letter(self, letter):
         num_letters = 0
         while letter.upper() not in self.LETTERS:
             if len(letter) != 1:
@@ -77,7 +78,7 @@ class GuessThatPhrase:
             letter = (str(input("Pick a letter: "))).lower()
         while letter in self.loaded_phrase:
             index = self.loaded_phrase.index(letter)
-            phrase_to_guess[index] = letter.upper()
+            self.phrase_to_guess[index] = letter.upper()
             self.loaded_phrase[index] = ' '
             num_letters += 1
         self.letters_picked.append(letter.upper())
@@ -90,9 +91,9 @@ class GuessThatPhrase:
             print(f"I'm sorry, there are no {letter.upper()}'s.\n")
 
     # Lets the user guess correct answer
-    def guess_phrase(self, phrase_to_guess):
+    def guess_phrase(self):
         print("Enter your solution.")
-        print(f'  Clues: {"".join(phrase_to_guess)}')
+        print(f'  Clues: {"".join(self.phrase_to_guess)}')
         guess = (str(input("  Guess: "))).lower()
         if guess == self.sentence.lower():
             print(f"{GameErrorCodes.HAVE_WON}")
@@ -111,25 +112,23 @@ class GuessThatPhrase:
 
             self.sentence = get_random_phrase()
 
-            phrase_to_guess = []
-
             for letter in self.sentence:
                 self.loaded_phrase.append(letter.lower())
                 if letter == '-' or letter == '&' or letter == "'":
-                    phrase_to_guess.append(letter)
+                    self.phrase_to_guess.append(letter)
                 elif letter != ' ':
-                    phrase_to_guess.append('_')
+                    self.phrase_to_guess.append('_')
                 else:
-                    phrase_to_guess.append(' ')
+                    self.phrase_to_guess.append(' ')
 
             while not solved:
-                self.main_display(phrase_to_guess)
+                self.main_display()
                 choice = get_user_choice()
                 solved, end_game = self.process_user_action(
-                    choice, phrase_to_guess)
+                    choice)
 
                 check_solution = ""
-                check_solution = check_solution.join(phrase_to_guess)
+                check_solution = check_solution.join(self.phrase_to_guess)
                 if self.sentence.upper() == check_solution:
                     print(f"{GameErrorCodes.HAVE_WON}")
                     end_game = True
