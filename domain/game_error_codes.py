@@ -4,3 +4,6 @@ class GameErrorCodes:
     INVALID_INPUT = "Invalid input"
     PLAY_AGAIN = "Would you like to play again? [Y/N]"
     HAVE_WON = "We have a winner!"
+
+
+# message = 1

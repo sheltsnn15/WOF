@@ -1,7 +1,7 @@
 from game_error_codes import GameErrorCodes
 import random as random
 
-from guess_that_phrase_dao import Guess_That_Phrase_DAO
+from dao.guess_that_phrase_dao import Guess_That_Phrase_DAO
 
 
 class Guess_That_Phrase:
@@ -9,6 +9,7 @@ class Guess_That_Phrase:
     def __init__(self):
         self.sentence = ""
         self.letters_picked = []
+        self.loaded_phrase = []
 
     LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
                'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
@@ -40,11 +41,11 @@ class Guess_That_Phrase:
 
     # User action process method
 
-    def process_user_action(self, choice, phrase_to_guess, loaded_phrase):
+    def process_user_action(self, choice, phrase_to_guess):
         solved = False
         end_game = False
         if choice == 1:
-            solved = self.guess_letter(phrase_to_guess, loaded_phrase)
+            solved = self.guess_letter(phrase_to_guess)
         elif choice == 2:
             solved = self.guess_phrase(phrase_to_guess)
         elif choice == 3:
@@ -60,7 +61,7 @@ class Guess_That_Phrase:
         return phrases[random.randint(0, size - 1)]
 
     # Ask user for a letter
-    def guess_letter(self, phrase_to_guess, loaded_phrase):
+    def guess_letter(self, phrase_to_guess):
         letter = (str(input("Pick a letter: "))).lower()
         num_letters = 0
         while letter.upper() not in self.LETTERS:
@@ -71,10 +72,10 @@ class Guess_That_Phrase:
             else:
                 print(f"{GameErrorCodes.INVALID_INPUT}")
             letter = (str(input("Pick a letter: "))).lower()
-        while letter in loaded_phrase:
-            index = loaded_phrase.index(letter)
+        while letter in self.loaded_phrase:
+            index = self.loaded_phrase.index(letter)
             phrase_to_guess[index] = letter.upper()
-            loaded_phrase[index] = ' '
+            self.loaded_phrase[index] = ' '
             num_letters += 1
         self.letters_picked.append(letter.upper())
         self.LETTERS[self.LETTERS.index(letter.upper())] = ' '
@@ -99,43 +100,40 @@ class Guess_That_Phrase:
             return False
 
     def starting_point(self):
-        new_game = ""
         # greeting the user
         print("Welcome to GUESS THAT PHRASE!\n")
-        while new_game != "N":
-            end_game = False
-            while not end_game:
-                solved = False
+        end_game = False
+        while not end_game:
+            solved = False
 
-                self.sentence = self.get_random_phrase()
+            self.sentence = self.get_random_phrase()
 
-                phrase_to_guess = []
-                loaded_phrase = []
+            phrase_to_guess = []
 
-                for letter in self.sentence:
-                    loaded_phrase.append(letter.lower())
-                    if letter == '-' or letter == '&' or letter == "'":
-                        phrase_to_guess.append(letter)
-                    elif letter != ' ':
-                        phrase_to_guess.append('_')
-                    else:
-                        phrase_to_guess.append(' ')
+            for letter in self.sentence:
+                self.loaded_phrase.append(letter.lower())
+                if letter == '-' or letter == '&' or letter == "'":
+                    phrase_to_guess.append(letter)
+                elif letter != ' ':
+                    phrase_to_guess.append('_')
+                else:
+                    phrase_to_guess.append(' ')
 
-                while not solved:
-                    self.main_display(phrase_to_guess)
-                    choice = self.get_user_choice()
-                    solved, end_game = self.process_user_action(
-                        choice, phrase_to_guess, loaded_phrase)
+            while not solved:
+                self.main_display(phrase_to_guess)
+                choice = self.get_user_choice()
+                solved, end_game = self.process_user_action(
+                    choice, phrase_to_guess)
 
-                    check_solution = ""
-                    check_solution = check_solution.join(phrase_to_guess)
-                    if self.sentence.upper() == check_solution:
-                        print(f"{GameErrorCodes.HAVE_WON}")
-                        end_game = True
-                    if end_game:
-                        break
+                check_solution = ""
+                check_solution = check_solution.join(phrase_to_guess)
+                if self.sentence.upper() == check_solution:
+                    print(f"{GameErrorCodes.HAVE_WON}")
+                    end_game = True
+                if end_game:
+                    break
 
-        print("Well done! Goodbye.!")
+        print("Goodbye.!")
 
 
 if __name__ == '__main__':
