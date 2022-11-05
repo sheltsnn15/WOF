@@ -1,3 +1,5 @@
+# @author Shelton Ngwenya, R00203947
+
 class GameErrorCodes:
     LETTER_ALREADY_GUESSED = "You already guessed that letter"
     ONLY_ONE_CHARACTER = "Please enter exactly one character"

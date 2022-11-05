@@ -1,3 +1,6 @@
+/**
+@author Shelton Ngwenya, R00203947
+ */
 syntax = "proto3";
 
 option java_multiple_files = true;
@@ -8,27 +11,16 @@ option objc_class_prefix = "GTP";
 // The greeting service definition.
 service DisplayGuessedLetter {
   // Sends a Phrase
-  rpc SendLetter (LetterRequest) returns (LetterResponse) {}
-  // Sends a Phrase
-  rpc SendPhrase (PhraseRequest) returns (PhraseResponse) {}
+  rpc SendUserChoice
+      (UserChoiceRequest) returns (UserChoiceResponse) {}
 }
 
 // The request message containing the phrase letter.
-message LetterRequest {
+message UserChoiceRequest {
   string letter = 1;
 }
 
 // The response message containing the greetings
-message LetterResponse {
-  string message = 1;
-}
-
-// The request message containing the phrase letter.
-message PhraseRequest {
-  string phrase = 1;
-}
-
-// The response message containing the greetings
-message PhraseResponse {
+message UserChoiceResponse {
   string message = 1;
 }

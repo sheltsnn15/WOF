@@ -1,3 +1,5 @@
+# @author Shelton Ngwenya, R00203947
+
 import random
 from functools import cache
 import time
