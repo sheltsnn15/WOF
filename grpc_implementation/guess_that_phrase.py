@@ -1,5 +1,3 @@
-# @author Shelton Ngwenya, R00203947
-
 from error_codes import GameErrorCodes
 import random as random
 
@@ -44,7 +42,7 @@ class GuessThatPhrase:
     # Main display
     def main_display(self):
         phrase = "".join(self.phrase_to_guess)
-        print(f'-------------------------------------------------------------------')
+        print(f'---------------- Welcome to the Wheel of Fortune! -----------------')
         print(f'     {phrase:^{54}}')
         print()
         print(f'Available Letters:  {"".join(self.LETTERS)}')
@@ -58,7 +56,8 @@ class GuessThatPhrase:
         solved = False
         end_game = False
         if choice == 1:
-            solved = self.guess_letter()
+            letter = str(input("Pick a letter: ")).lower()
+            solved = self.guess_letter(letter)
         elif choice == 2:
             solved = self.guess_phrase()
         elif choice == 3:
@@ -67,9 +66,7 @@ class GuessThatPhrase:
         return end_game, solved
 
     # Ask user for a letter
-    def guess_letter(self):
-
-        letter = str(input("Pick a letter: ")).lower()
+    def guess_letter(self, letter):
         num_letters = 0
         while letter.upper() not in self.LETTERS:
             if len(letter) != 1:
@@ -108,7 +105,7 @@ class GuessThatPhrase:
 
     def starting_point(self):
         # greeting the user
-        print(f'---------------- Welcome to GUESS THAT PHRASE! -----------------\n')
+        print("Welcome to GUESS THAT PHRASE!\n")
         end_game = False
         while not end_game:
             solved = False
