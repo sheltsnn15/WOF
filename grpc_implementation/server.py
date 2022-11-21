@@ -2,7 +2,6 @@ from concurrent import futures
 
 import grpc
 
-import guess_that_phrase
 import guess_that_phrase_pb2
 import guess_that_phrase_pb2_grpc
 from guess_that_phrase import GuessThatPhrase
