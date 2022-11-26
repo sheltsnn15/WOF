@@ -1,49 +1,42 @@
-from concurrent import futures
-
-import grpc
-
-import guess_that_phrase_pb2
-import guess_that_phrase_pb2_grpc
-from guess_that_phrase import GuessThatPhrase
+import socket
+import threading
 
 
-class DisplayGuessedLetterServicer(guess_that_phrase_pb2_grpc.DisplayGuessedLetterServicer):
-    """The greeting service definition.
-    """
+class ClientThread(threading.Thread):
 
-    def __init__(self):
-        pass
+    def __init__(self, client_address, client_socket, identity):
+        threading.Thread.__init__(self)
+        self.c_socket = client_socket
+        print("Connection no. " + str(identity))
+        print("New connection added: ", client_address)
 
-    def SendLetter(self, request, context):
-        """Sends a Phrase
-        """
-        print("Got request " + str(request.letter))
-        GuessThatPhrase.starting_point()
-        return guess_that_phrase_pb2.LetterResponse(message='Hello, %s!' % request.letter)
-
-    def SendPhrase(self, request, context):
-        """Sends a Phrase
-        """
-        # guess_that_phrase.Guess_That_Phrase.guess_phrase(request.letter)
-        print("Got request " + str(request.phrase))
-        return guess_that_phrase_pb2.PhraseResponse(message='Hello, %s!' % request.phrase)
-
-    # define server
+    def run(self):
+        print("Connection from : ", clientAddress)
+        while True:
+            data = self.c_socket.recv(2048)
+            msg = data.decode()
+            if msg == 'bye':
+                break
+            print("from client", msg)
+            self.c_socket.send(bytes(msg, 'UTF-8'))
+        print("Client at ", clientAddress, " disconnected...")
 
 
-def server():
-    port = '50051'
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=2))
-    guess_that_phrase_pb2_grpc.add_DisplayGuessedLetterServicer_to_server(
-        DisplayGuessedLetterServicer(), server)
-    server.add_insecure_port('[::]:' + port)
-    server.start()
-    print("Server started, listening on " + port)
-    server.wait_for_termination()
+LOCALHOST = "127.0.0.1"
+PORT = 64001
 
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+server.bind((LOCALHOST, PORT))
 
-server()
+print("Server started")
+print("Waiting for client request..")
 
-# build simplest first
-# build from there
-# look at geek for geeks
+counter = 0
+
+while True:
+    server.listen(1)
+    my_socket, clientAddress = server.accept()
+    counter = counter + 1
+    new_thread = ClientThread(clientAddress, my_socket, counter)
+    new_thread.start()

@@ -1,18 +1,18 @@
-import grpc
+import socket
 
-import guess_that_phrase_pb2
-import guess_that_phrase_pb2_grpc
-import logging
+SERVER = "127.0.0.1"
+PORT = 64001
 
+client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client.connect((SERVER, PORT))
+client.sendall(bytes("This is from Client", 'UTF-8'))
 
-def run():
-    with grpc.insecure_channel('localhost:50051') as channel:
-        stub = guess_that_phrase_pb2_grpc.DisplayGuessedLetterStub(channel)
-        response = stub.SendLetter(
-            guess_that_phrase_pb2.LetterRequest(letter=input("Enter name: ")))
-    print("Greeter client received: " + response.message)
+while True:
+    in_data = client.recv(1024)
+    print("From Server :", in_data.decode())
+    out_data = input()
+    client.sendall(bytes(out_data, 'UTF-8'))
+    if out_data == 'bye':
+        break
 
-
-if __name__ == '__main__':
-    logging.basicConfig()
-    run()
+client.close()
